@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template, request
 import math
 import requests
 import hashlib
@@ -51,11 +51,13 @@ def welcome():
         )
 
 
-@app.route('/md5/<string:input_md5>')
+@app.route('/md5/<input_md5>')
 def md5_hash(input_md5):
+    m=hashlib.md5()
+    m.update((input_md5).encode('utf-8'))
     return jsonify(
         input = input_md5,
-        output = hashlib.md5(input_md5).hexdigest()
+        output = m.hexdigest()
         )
 
 
@@ -67,8 +69,8 @@ def factorial_return(input_fact):
         )
 
 
-@app.route('/is_prime/<int:input_prime>')
-def prime(input_prime):
+@app.route('/is-prime/<int:input_prime>')
+def is_prime(input_prime):
     return jsonify(
         input = input_prime,
         output = is_prime(input_prime)
@@ -88,4 +90,4 @@ def slack_post(input_slack):
         output = result
         )
 
-app.run(host='127.0.0.1', port=5000)
+app.run(host='0.0.0.0', port=5000)
