@@ -88,4 +88,5 @@ def slack_post(input_slack):
         result = "An error occured posting message to Slack (HTTP response: " + str(resp.status_code) + " ) "
     return jsonfiy(
         input = input_slack,
-        output = result)
+        output = result
+    )
