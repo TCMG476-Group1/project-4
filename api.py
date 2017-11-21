@@ -40,8 +40,12 @@ def is_prime(n):
 
 #Flask Applications
 
+slack_url = "https://hooks.slack.com/services/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"
+
 api = Flask(_name_)
 
+if _name_ == "_main_":
+    api.run(host='0.0.0.0', port=5000)
 
 @api.route('/')
 def welcome():
@@ -75,4 +79,13 @@ def prime(input_prime):
 
 
 @api.route('/slack-alert/<string:input_slack>')
-def slac_post(input_slack):
+def slack_post(input_slack):
+    data = { 'text': input_slack }
+    resp = requests.post(slack_url, json=data)
+    if resp.status_code == 200:
+        result = "Message successfullyposted to Slack chanel " + "#general"
+    else:
+        result = "An error occured posting message to Slack (HTTP response: " + str(resp.status_code) + " ) "
+    return jsonfiy(
+        input = input_slack,
+        output = result)
