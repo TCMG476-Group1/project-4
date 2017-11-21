@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, jsonify
 import math
 import requests
 import hashlib
-import os
 
 #Api funtions
 
@@ -42,19 +41,19 @@ def is_prime(n):
 
 slack_url = "https://hooks.slack.com/services/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"
 
-api = Flask(_name_)
+app = Flask(__name__)
 
-if _name_ == "_main_":
-    api.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
 
-@api.route('/')
+@app.route('/')
 def welcome():
     return jsonify(
         output = "TCMG 476 Group 1"
         )
 
 
-@api.route('/md5/<string:input_md5>')
+@app.route('/md5/<string:input_md5>')
 def md5_hash(input_md5):
     return jsonify(
         input = input_md5,
@@ -62,7 +61,7 @@ def md5_hash(input_md5):
         )
 
 
-@api.route('/factorial/<int:input_fact>')
+@app.route('/factorial/<int:input_fact>')
 def factorial_return(input_fact):
     return jsonify(
         input = input_fact,
@@ -70,7 +69,7 @@ def factorial_return(input_fact):
         )
 
 
-@api.route('/is_prime/<int:input_prime>')
+@app.route('/is_prime/<int:input_prime>')
 def prime(input_prime):
     return jsonify(
         input = input_prime,
@@ -78,7 +77,7 @@ def prime(input_prime):
         )
 
 
-@api.route('/slack-alert/<string:input_slack>')
+@app.route('/slack-alert/<string:input_slack>')
 def slack_post(input_slack):
     data = { 'text': input_slack }
     resp = requests.post(slack_url, json=data)
@@ -89,4 +88,4 @@ def slack_post(input_slack):
     return jsonfiy(
         input = input_slack,
         output = result
-    )
+        )
