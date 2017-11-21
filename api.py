@@ -43,8 +43,6 @@ slack_url = "https://hooks.slack.com/services/T6T9UEWL8/B7YB0S3C4/30PzU7t7eW0Mjv
 
 app = Flask(__name__)
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
 
 @app.route('/')
 def welcome():
@@ -89,3 +87,5 @@ def slack_post(input_slack):
         input = input_slack,
         output = result
         )
+
+app.run(host='127.0.0.1', port=5000)
