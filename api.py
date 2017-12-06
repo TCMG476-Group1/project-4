@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, render_template, request
+from redis import Redis
 import math
 import requests
 import hashlib
@@ -13,19 +14,16 @@ def fact(n):
         return math.factorial(n)
 
 
-def fib(n):
-    x, y = 0, 1
-    lt = []
-    lt.append(x)
-    while x < n:
-        x += y
-        lt.append(x)
-        y = sum(lt[-2:])
-        lt.append(y)
-    return lt
+def fibb(n):
+    f_1, f_2 = 0, 1
+    flist = [0]
+    while f_2 <= n:
+        flist.append(f_2)
+        f_1, f_2 = f_2, f_1 + f_2
+    return flist
 
 
-def is_prime(n):
+def isprime(n):
     if n < 2:
         return False
     else:
@@ -42,6 +40,10 @@ def is_prime(n):
 slack_url = "https://hooks.slack.com/services/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"
 
 app = Flask(__name__)
+
+#Redis Setup
+
+redis = Redis(host='redis', port = 6379)
 
 
 @app.route('/')
@@ -73,21 +75,45 @@ def factorial_return(input_fact):
 def is_prime(input_prime):
     return jsonify(
         input = input_prime,
-        output = is_prime(input_prime)
+        output = isprime(input_prime)
         )
 
+@app.route('/fibonacci/<int:input_fib>')
+def fibonacci(input_fib):
+    return jsonify(
+        input = input_fib,
+        output = fibb(input_fib)
+        )
 
-@app.route('/slack-alert/<string:input_slack>')
+'''@app.route('/slack-alert/<string:input_slack>')
 def slack_post(input_slack):
     data = { 'text': input_slack }
     resp = requests.post(slack_url, json=data)
     if resp.status_code == 200:
-        result = "Message successfullyposted to Slack chanel " + "#general"
+        result = True
     else:
-        result = "An error occured posting message to Slack (HTTP response: " + str(resp.status_code) + " ) "
-    return jsonfiy(
+        result = False
+    return jsonify(
         input = input_slack,
         output = result
         )
+'''
+@app.route('/kv-record/<string:input_kvrcd>')
+def kv_record(input_kvrcd):
+    jsonify(
+        input = input_kvrcd
+        output = redis.set(input_kvrcd)
+        error =
+        )
+
+@app.route('/kv-retrieve/<string:input_kvrtr>')
+def kv_retrieve(input_kvrtr):
+    jsonify(
+        input =
+        output =
+        error =
+        )
+
 
 app.run(host='0.0.0.0', port=5000)
+

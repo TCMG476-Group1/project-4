@@ -8,8 +8,9 @@ WORKDIR /app
 ADD . /app
 
 #Getting the installbase ready
-RUN pip install Flask
-Run pip install requests
+RUN pip install flask
+RUN pip install requests
+RUN pip install redis
 
 #Exposing the port 5000
 EXPOSE 5000
