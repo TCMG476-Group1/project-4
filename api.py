@@ -85,7 +85,7 @@ def fibonacci(input_fib):
         output = fibb(input_fib)
         )
 
-'''@app.route('/slack-alert/<string:input_slack>')
+@app.route('/slack-alert/<string:input_slack>')
 def slack_post(input_slack):
     data = { 'text': input_slack }
     resp = requests.post(slack_url, json=data)
@@ -97,22 +97,46 @@ def slack_post(input_slack):
         input = input_slack,
         output = result
         )
-'''
-@app.route('/kv-record/<string:input_kvrcd>')
-def kv_record(input_kvrcd):
-    jsonify(
-        input = input_kvrcd
-        output = redis.set(input_kvrcd)
-        error =
-        )
 
-@app.route('/kv-retrieve/<string:input_kvrtr>')
-def kv_retrieve(input_kvrtr):
-    jsonify(
-        input =
-        output =
-        error =
-        )
+
+@app.route('/kv-record/<string:input_kvr>')
+def kv_record(input_kvr):
+        input = input_kvr
+        output = False
+        error_code = None
+        key_value = redis.get(input_kvr)
+        if key_value is None:
+            error_code = "Key already exists."
+        else:
+            redis_value = request.get_json()
+            redis_new = redis.set(input_kvr, redis_value['key_value'])
+            if redis_new is False:
+                error_code = "Redis key creation problem."
+            else:
+                output = True
+                input = redis_value
+        return jsonify(
+            input = redis_value,
+            output = output,
+            error = error_code
+            )
+
+
+@app.route('/kv-retrieve/<string:input_kvr>')
+def kv_retrieve(input_kvr):
+    output = False
+    error_code = None
+    key_value = redis.get(input_kvr)
+    if key_value is None:
+        error_code = "There is no key value. "
+    else:
+        output = key_value
+
+    return jsonify(
+        input = input_kvr,
+        output = output,
+        error = error_code
+)
 
 
 app.run(host='0.0.0.0', port=5000)
