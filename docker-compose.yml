@@ -7,8 +7,8 @@ services:
     networks:
       - webnet
   redis:
-    image: redis
+    image: 'redis:alpine'
     networks:
       - webnet
 networks:
-webnet:
+  - webnet
