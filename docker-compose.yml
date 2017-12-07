@@ -1,7 +1,7 @@
 version: '3'
 services:
-  web:
-    build: .
+  app:
+    build: tcmg476 .
     ports:
      - "5000:5000"
 
